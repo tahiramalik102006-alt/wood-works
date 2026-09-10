@@ -1,0 +1,6 @@
+{
+  "name": "Aslam Wood Works",
+  "description": "Handcrafted solid wood furniture showroom and custom workshop featuring premium bed sets, wardrobes, dining sets, and custom orders with direct WhatsApp confirmation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
