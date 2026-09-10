@@ -170,6 +170,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             </div>
           ) : (
             <>
+              {/* Occasion Sale Notification */}
+              {settings.isSaleActive && (
+                <div className="p-3 rounded-xl bg-gradient-to-r from-red-50 to-amber-50 border border-red-200 text-xs text-red-950 flex items-center justify-between shadow-2xs">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-extrabold uppercase">
+                      {settings.saleDiscountPercentage || 15}% OFF
+                    </span>
+                    <span className="font-bold text-red-900">{settings.saleTitle || 'Special Occasion Sale'}</span>
+                  </div>
+                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    Benefit Active
+                  </span>
+                </div>
+              )}
+
               {/* Item List */}
               <div className="space-y-3">
                 {cart.map((item) => (

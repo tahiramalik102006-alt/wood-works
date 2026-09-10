@@ -7,7 +7,7 @@ import {
   Star 
 } from 'lucide-react';
 import { Product, StoreSettings } from '../types';
-import { formatRupees, generateWhatsAppOrderUrl } from '../utils/storage';
+import { formatRupees, generateWhatsAppOrderUrl, getEffectiveProductPrice } from '../utils/storage';
 
 interface ProductCardProps {
   product: Product;
@@ -22,8 +22,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onSelectProduct,
   onQuickWhatsApp,
 }) => {
-  const currentPrice = product.discountPrice ?? product.basePrice;
-  const hasDiscount = Boolean(product.discountPrice && product.discountPrice < product.basePrice);
+  const priceInfo = getEffectiveProductPrice(product, settings);
+  const currentPrice = priceInfo.finalPrice;
+  const hasDiscount = priceInfo.hasDiscount;
 
   const defaultSize = product.sizes[0]?.name || 'Standard';
   const defaultWood = product.woodTypes[0] || 'Solid Sheesham';
@@ -63,8 +64,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </span>
           )}
           {hasDiscount && (
-            <span className="px-2 py-0.5 rounded-md text-[11px] font-bold bg-[#B91C1C] text-white shadow-xs">
-              Save {formatRupees(product.basePrice - (product.discountPrice || 0))}
+            <span className={`px-2.5 py-1 rounded-md text-[11px] font-bold text-white shadow-sm flex items-center gap-1 ${
+              priceInfo.isOccasionSale 
+                ? 'bg-gradient-to-r from-[#B91C1C] to-[#C2410C] border border-amber-300/40 animate-pulse' 
+                : 'bg-[#B91C1C]'
+            }`}>
+              {priceInfo.isOccasionSale ? `🎉 ${priceInfo.discountPercentage}% OFF Occasion Sale` : `Save ${formatRupees(priceInfo.savings)}`}
             </span>
           )}
         </div>

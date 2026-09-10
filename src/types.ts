@@ -54,6 +54,12 @@ export interface StoreSettings {
   tagline: string;
   leadTimeInfo: string;
   currency: string;
+  // Occasion & Promotional Sale Options
+  isSaleActive?: boolean;
+  saleTitle?: string;              // e.g. "Festive Occasion Sale" or "Wedding Season Grand Sale"
+  saleDiscountPercentage?: number; // e.g. 15 for 15% OFF
+  saleBannerText?: string;         // e.g. "Special Occasion Discount: Flat 15% OFF across all solid timber furniture!"
+  saleTagline?: string;            // e.g. "Limited-Time Festive Benefit"
 }
 
 export interface OrderInquiry {

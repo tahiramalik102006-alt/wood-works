@@ -15,7 +15,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { Product, StoreSettings } from '../types';
-import { formatRupees, generateWhatsAppOrderUrl } from '../utils/storage';
+import { formatRupees, generateWhatsAppOrderUrl, getEffectiveProductPrice } from '../utils/storage';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -56,8 +56,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const [quantity, setQuantity] = useState(1);
   const [addedToast, setAddedToast] = useState(false);
 
-  // Calculate dynamic price based on size and wood
-  const baseActivePrice = product.discountPrice ?? product.basePrice;
+  // Calculate dynamic price based on size, wood, and active occasion sale
+  const priceInfo = getEffectiveProductPrice(product, settings);
+  const baseActivePrice = priceInfo.finalPrice;
   const sizePriceDelta = product.sizes[selectedSizeIndex]?.priceDelta || 0;
 
   // Additional wood type delta if text contains +Rs or -Rs
@@ -71,6 +72,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   const calculatedUnitPrice = Math.max(1000, baseActivePrice + sizePriceDelta + woodPriceDelta);
   const calculatedTotalPrice = calculatedUnitPrice * quantity;
+  const regularTotalPrice = (product.basePrice + sizePriceDelta + woodPriceDelta) * quantity;
+  const hasSaleDiscount = calculatedTotalPrice < regularTotalPrice;
 
   const currentSizeObj = product.sizes[selectedSizeIndex] || { name: 'Standard' };
 
@@ -385,9 +388,21 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         <div className="p-4 sm:p-5 border-t border-[#E8DFC8] bg-[#F5EFE6] flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="text-left w-full sm:w-auto">
             <span className="text-[11px] text-[#7A6958] font-medium block">Total Estimate (Rupees):</span>
-            <span className="text-xl sm:text-2xl font-bold font-serif-luxury text-[#2C1F14]">
-              {formatRupees(calculatedTotalPrice)}
-            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl sm:text-2xl font-bold font-serif-luxury text-[#2C1F14]">
+                {formatRupees(calculatedTotalPrice)}
+              </span>
+              {hasSaleDiscount && (
+                <>
+                  <span className="text-xs text-[#8C7A6B] line-through">
+                    {formatRupees(regularTotalPrice)}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#B91C1C] text-white">
+                    {priceInfo.isOccasionSale ? `🎉 ${priceInfo.discountPercentage}% OFF` : `Save ${formatRupees(regularTotalPrice - calculatedTotalPrice)}`}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto">

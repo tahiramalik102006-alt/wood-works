@@ -9,6 +9,11 @@ export const INITIAL_SETTINGS: StoreSettings = {
   tagline: 'Master Artisans in Solid Sheesham, Teak & Premium Woodcraft',
   leadTimeInfo: 'Custom hand-crafted furniture ready in 14-21 working days with door-step delivery & setup.',
   currency: 'Rs.',
+  isSaleActive: true,
+  saleTitle: 'Festive Occasion & Wedding Season Sale',
+  saleDiscountPercentage: 15,
+  saleBannerText: 'Special Occasion Offer: Flat 15% OFF across all authentic solid Sheesham & Teak master furniture! Free workshop polish upgrade & doorstep setup.',
+  saleTagline: 'Limited Occasion Benefit',
 };
 
 export const INITIAL_PRODUCTS: Product[] = [
@@ -432,7 +437,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1540574163026-643ea20ade25?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1512212621149-107ffe572d2f?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'A 7-seater configuration (3-seater + 2-seater + 2 single armchairs) showcasing exposed solid Sheesham armrests and base frame with mortise-and-tenon joints. Upholstered with Master MoltyFoam 10-year guaranteed cushions and premium Turkish woven upholstery.',
     dimensions: '3-Seater: 82" (W) x 34" (D) | 2-Seater: 60" (W) | Single Chairs: 34" (W)',
@@ -470,7 +479,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1540574163026-643ea20ade25?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Clean Scandinavian lines with an exposed solid teak frame, slatted backrest, and thick duck-feather blend cushions. Includes 3-seater couch and 2 single lounge chairs with matching coffee table.',
     dimensions: '3-Seater: 76" (W) x 32" (D) | 1-Seaters: 32" (W) x 32" (D)',
@@ -504,7 +517,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1512212621149-107ffe572d2f?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'A cozy fireside or bedroom sitting set featuring 2 ergonomic solid Sheesham armchairs with hand-carved armrests and a matching two-tier round wooden coffee table.',
     dimensions: 'Chairs: 30" (W) x 32" (D) x 34" (H) | Table: 24" (Dia) x 20" (H)',
@@ -528,6 +544,43 @@ export const INITIAL_PRODUCTS: Product[] = [
     rating: 4.8,
     reviewsCount: 26
   },
+  {
+    id: 'aww-sofa-04',
+    name: 'Chinioti Royal Crown Hand-Carved 5-Seater Sofa Suite',
+    category: 'sofas',
+    basePrice: 225000,
+    discountPrice: 205000,
+    image: 'https://images.unsplash.com/photo-1540574163026-643ea20ade25?auto=format&fit=crop&w=1200&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1540574163026-643ea20ade25?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=85'
+    ],
+    description: 'Heritage royal drawing room suite with ornate hand-chiselled crown woodwork, solid Sheesham timber legs, and luxury brocade velvet cushioning. A showstopper centerpiece for formal guest entertaining.',
+    dimensions: '3-Seater: 80" (W) x 34" (D) x 38" (H) | Single Chairs: 35" (W) x 34" (D) x 38" (H)',
+    woodTypes: [
+      '100% Solid Seasoned Sheesham Rosewood',
+      'Pure Teak Timber (+Rs. 25,000)'
+    ],
+    sizes: [
+      { name: '5-Seater Suite (3+1+1)', priceDelta: 0, label: '5-Seater Royal Suite' },
+      { name: '7-Seater Grand (3+2+1+1)', priceDelta: 45000, label: '7-Seater Grand Living Room' }
+    ],
+    colors: [
+      { name: 'Walnut & Gold Rub Polish', hex: '#3E2723', desc: 'Antique walnut with hand-rubbed gold accents' },
+      { name: 'Champagne Cream & Teak', hex: '#D2B48C', desc: 'Warm royal cream aesthetic' }
+    ],
+    includedPieces: [
+      '1x 3-Seater Carved Royal Sofa',
+      '2x Single Carved Sovereign Armchairs',
+      '4x Silk Accent Pillows'
+    ],
+    leadTime: '18 to 22 Working Days',
+    rating: 5.0,
+    reviewsCount: 18
+  },
 
   // ================= DRESSING & CONSOLES (ONLY REAL DRESSING TABLES) =================
   {
@@ -539,7 +592,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'An elegant vanity unit with curved solid wood drawers, antique brass knobs, and an oversized arched dressing mirror. Includes a matching upholstered cushioned sitting stool.',
     dimensions: 'Dresser: 48" (W) x 18" (D) x 32" (H) | Mirror: 40" (H) x 32" (W)',
@@ -576,7 +633,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Clean modern dresser console featuring 6 spacious push-to-open soft-close drawers and an elegant circular or rectangular beveled glass mirror.',
     dimensions: 'Dresser: 56" (W) x 18" (D) x 34" (H) | Mirror: 36" Dia',
@@ -609,7 +669,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Heirloom bridal vanity crafted with traditional floral carving around the crown mirror, carved cabriole legs, and jewelry partitions inside velvet lined top drawers.',
     dimensions: 'Dresser: 52" (W) x 20" (D) x 36" (H) | Mirror: 46" (H)',
@@ -633,6 +696,43 @@ export const INITIAL_PRODUCTS: Product[] = [
     rating: 5.0,
     reviewsCount: 14
   },
+  {
+    id: 'aww-dressing-04',
+    name: 'Nordic Solid Sheesham Floating Vanity Console & Mirror',
+    category: 'dressing-consoles',
+    basePrice: 78000,
+    discountPrice: 69000,
+    image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&w=1200&q=85'
+    ],
+    description: 'A wall-mounted space-saving floating console featuring 2 soft-glide solid wood drawers and an oversized circular beveled glass mirror with integrated solid brass hangers.',
+    dimensions: 'Floating Shelf: 42" (W) x 15" (D) x 8" (H) | Mirror: 32" Diameter',
+    woodTypes: [
+      '100% Solid Seasoned Sheesham',
+      'Solid Teak Timber (+Rs. 12,000)'
+    ],
+    sizes: [
+      { name: '42" Width Standard', priceDelta: 0, label: 'Standard 42" Floating Unit' },
+      { name: '52" Width Extended', priceDelta: 14000, label: 'Extended 52" Dual Drawer Unit' }
+    ],
+    colors: [
+      { name: 'Natural Sheesham Polish', hex: '#8B4513', desc: 'Rich honey timber sheen' },
+      { name: 'Smoked Walnut', hex: '#3E2723', desc: 'Dark matte modern finish' }
+    ],
+    includedPieces: [
+      '1x Solid Wood Wall Mounted Floating Console',
+      '1x Round Beveled Edge Mirror',
+      'Heavy Duty Wall Anchor Bolts'
+    ],
+    leadTime: '8 to 12 Working Days',
+    rating: 4.9,
+    reviewsCount: 11
+  },
 
   // ================= CUSTOM ORDERS & WALLS (ONLY REAL WOODWORK & MEDIA WALLS) =================
   {
@@ -644,7 +744,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Custom designed to your room dimensions. Features floor-to-ceiling solid Sheesham fluted wooden acoustic slats, floating lower media console with soft-close push drawers, and concealed cable management channels.',
     dimensions: 'Custom Made to Order (Default: 8 ft Width x 8.5 ft Height)',
@@ -681,7 +785,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'Handcrafted floor-to-ceiling solid wood partition panel with rotating vertical slats or intricate geometric jali woodwork. Ideal for separating drawing and dining spaces while allowing light and airflow.',
     dimensions: 'Made to Room Height (e.g. 9 ft Height x 5 ft Width)',
@@ -714,7 +821,10 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=85'
     ],
     description: 'A bespoke solid wood buffet sideboard featuring 3D wave-textured wooden door panels, solid brass hardware, and concealed internal shelves. Works as a dining buffet or entryway statement console.',
     dimensions: 'Length: 6 ft (72") x 18" (D) x 32" (H)',
@@ -738,15 +848,101 @@ export const INITIAL_PRODUCTS: Product[] = [
     leadTime: '14 to 18 Working Days',
     rating: 5.0,
     reviewsCount: 15
+  },
+  {
+    id: 'aww-custom-04',
+    name: 'Executive Solid Sheesham Presidential Office Desk & Credenza',
+    category: 'custom-woodwork',
+    basePrice: 165000,
+    discountPrice: 148000,
+    image: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=85'
+    ],
+    description: 'Grand executive study desk crafted in heavy seasoned solid Sheesham with wire concealment grommets, locked central drawer, fluted modesty front panel, and matching side credenza.',
+    dimensions: 'Main Desk: 6.5 ft (L) x 3 ft (W) x 30" (H) | Side Credenza: 4 ft (L) x 18" (W)',
+    woodTypes: [
+      '100% Solid Seasoned Sheesham',
+      'Solid Burma Teakwood (+Rs. 32,000)'
+    ],
+    sizes: [
+      { name: 'Executive Suite (6.5 ft Desk + Credenza)', priceDelta: 0, label: 'Executive Suite with Side Return' },
+      { name: 'Executive Desk Only (6.5 ft)', priceDelta: -45000, label: 'Main Desk Only' }
+    ],
+    colors: [
+      { name: 'Dark Walnut Semi-Gloss', hex: '#3E2723', desc: 'Prestige corporate executive shade' },
+      { name: 'Natural Sheesham Polish', hex: '#8B4513', desc: 'Rich amber rosewood grain' }
+    ],
+    includedPieces: [
+      '1x Master Solid Wood Executive Desk',
+      '1x Side Credenza with 3 Lockable Drawers',
+      'Integrated Brass Wire Grommets'
+    ],
+    leadTime: '16 to 22 Working Days',
+    rating: 5.0,
+    reviewsCount: 8
   }
 ];
 
 export const CATEGORIES = [
-  { id: 'all', label: 'All Woodwork', icon: 'Sparkles' },
-  { id: 'bed-sets', label: 'Bed Sets', icon: 'Bed' },
-  { id: 'wardrobes', label: 'Wardrobes & Closets', icon: 'DoorClosed' },
-  { id: 'dining-sets', label: 'Dining Sets', icon: 'Utensils' },
-  { id: 'sofas', label: 'Sofa Sets & Lounges', icon: 'Armchair' },
-  { id: 'dressing-consoles', label: 'Dressing & Consoles', icon: 'Mirror' },
-  { id: 'custom-woodwork', label: 'Custom Orders & Walls', icon: 'Hammer' },
+  { 
+    id: 'all', 
+    label: 'All Woodwork', 
+    icon: 'Sparkles',
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85',
+    description: 'Explore the complete master catalog of handcrafted solid timber creations.',
+    tagline: 'Entire Workshop Collection'
+  },
+  { 
+    id: 'bed-sets', 
+    label: 'Bed Sets', 
+    icon: 'Bed',
+    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=85',
+    description: 'Heirloom King & Queen bed sets with matching side tables and fluted headboards.',
+    tagline: 'Master Bedroom Luxury'
+  },
+  { 
+    id: 'wardrobes', 
+    label: 'Wardrobes & Closets', 
+    icon: 'DoorClosed',
+    image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=1200&q=85',
+    description: '3-door, 4-door & 6-door wardrobes in solid Sheesham with internal solid drawers.',
+    tagline: 'Spacious Storage Craft'
+  },
+  { 
+    id: 'dining-sets', 
+    label: 'Dining Sets', 
+    icon: 'Utensils',
+    image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=85',
+    description: '6-seater & 8-seater solid timber dining tables with hand-carved ergonomic chairs.',
+    tagline: 'Family Gatherings & Feasts'
+  },
+  { 
+    id: 'sofas', 
+    label: 'Sofa Sets & Lounges', 
+    icon: 'Armchair',
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=85',
+    description: 'Solid wood framed living room sofas, Scandinavian teak lounges & accent chairs.',
+    tagline: 'Comfort & Timber Strength'
+  },
+  { 
+    id: 'dressing-consoles', 
+    label: 'Dressing & Consoles', 
+    icon: 'Frame',
+    image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=85',
+    description: 'Vanity dressing tables with beveled mirrors, velvet drawer partitions & stools.',
+    tagline: 'Elegance & Grooming'
+  },
+  { 
+    id: 'custom-woodwork', 
+    label: 'Custom Orders & Walls', 
+    icon: 'Hammer',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
+    description: 'Architectural fluted TV media walls, room dividers, credenzas & bespoke orders.',
+    tagline: 'Bespoke Architectural Craft'
+  },
 ] as const;

@@ -6,9 +6,13 @@ import {
   ShieldCheck, 
   Menu, 
   X, 
+  Search,
   SlidersHorizontal,
   Clock,
-  MapPin
+  MapPin,
+  Lock,
+  Tag,
+  Sparkles
 } from 'lucide-react';
 import { StoreSettings } from '../types';
 import { CATEGORIES } from '../data/furnitureData';
@@ -20,6 +24,9 @@ interface NavbarProps {
   onOpenAdmin: () => void;
   selectedCategory: string;
   onSelectCategory: (cat: string) => void;
+  onToggleSidebar?: () => void;
+  searchQuery?: string;
+  onSearchChange?: (q: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -29,6 +36,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAdmin,
   selectedCategory,
   onSelectCategory,
+  onToggleSidebar,
+  searchQuery = '',
+  onSearchChange,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -39,40 +49,84 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E8DFC8]">
-      {/* Top Announcement Bar */}
-      <div className="bg-[#2C1F14] text-[#E8DFC8] text-xs py-2 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
-          <div className="flex items-center gap-4 flex-wrap justify-center">
-            <span className="flex items-center gap-1.5 font-medium text-[#D4AF37]">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              100% Solid Seasoned Sheesham & Teak Wood
-            </span>
-            <span className="hidden md:inline-block text-[#8C7A6B]">•</span>
-            <span className="hidden md:flex items-center gap-1 text-[#C4B5A5]">
-              <Clock className="w-3.5 h-3.5" />
-              Custom Sizing & Polish Choice Available
-            </span>
-          </div>
-          <div className="flex items-center gap-3 text-xs">
-            <a
-              id="top-bar-whatsapp-btn"
-              href={quickWhatsAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-white bg-[#25D366] hover:bg-[#20ba59] px-3 py-1 rounded-full font-semibold shadow-xs transition-all"
-            >
-              <MessageCircle className="w-3.5 h-3.5 fill-white" />
-              <span>Contact on WhatsApp</span>
-            </a>
+      {/* Top Announcement Bar / Occasion Sale Banner */}
+      {settings.isSaleActive ? (
+        <div className="bg-gradient-to-r from-[#991B1B] via-[#B91C1C] to-[#881337] text-white text-xs py-2 px-4 shadow-sm border-b border-red-900/40">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
+            <div className="flex items-center gap-2 flex-wrap justify-center font-medium">
+              <span className="px-2 py-0.5 rounded-full bg-white text-[#991B1B] text-[10px] font-extrabold uppercase tracking-wider shadow-xs animate-pulse">
+                {settings.saleDiscountPercentage || 15}% OFF
+              </span>
+              <span className="font-bold text-[#FEF3C7] flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                {settings.saleTitle || 'Special Occasion Sale'}:
+              </span>
+              <span className="text-white/95 text-[11px] sm:text-xs">
+                {settings.saleBannerText || 'Flat discount applied across entire furniture catalog. Direct WhatsApp order confirmation.'}
+              </span>
+            </div>
+            <div className="flex items-center gap-3 text-xs shrink-0">
+              <a
+                id="top-bar-sale-whatsapp-btn"
+                href={`https://wa.me/${cleanPhone}?text=${encodeURIComponent(
+                  `Hello ${settings.businessName}, I would like to order furniture with the ${settings.saleTitle || 'Occasion Sale'} (${settings.saleDiscountPercentage || 15}% discount benefit).`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[#991B1B] bg-white hover:bg-amber-100 px-3 py-1 rounded-full font-bold shadow-xs transition-all text-xs"
+              >
+                <MessageCircle className="w-3.5 h-3.5 fill-[#25D366] text-[#25D366]" />
+                <span>Claim Discount on WhatsApp</span>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-[#2C1F14] text-[#E8DFC8] text-xs py-2 px-4">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
+            <div className="flex items-center gap-4 flex-wrap justify-center">
+              <span className="flex items-center gap-1.5 font-medium text-[#D4AF37]">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                100% Solid Seasoned Sheesham &amp; Teak Wood
+              </span>
+              <span className="hidden md:inline-block text-[#8C7A6B]">•</span>
+              <span className="hidden md:flex items-center gap-1 text-[#C4B5A5]">
+                <Clock className="w-3.5 h-3.5" />
+                Custom Sizing &amp; Polish Choice Available
+              </span>
+            </div>
+            <div className="flex items-center gap-3 text-xs">
+              <a
+                id="top-bar-whatsapp-btn"
+                href={quickWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-white bg-[#25D366] hover:bg-[#20ba59] px-3 py-1 rounded-full font-semibold shadow-xs transition-all"
+              >
+                <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                <span>Contact on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo & Branding */}
+          {/* Left: Sidebar Toggle Button (Mobile/Tablet) + Logo & Branding */}
           <div className="flex items-center gap-3">
+            {/* Side Menu Toggle for mobile/tablet */}
+            <button
+              onClick={onToggleSidebar}
+              className="lg:hidden p-2 rounded-xl bg-[#2C1F14] text-[#D4AF37] hover:bg-[#3D2C1D] transition-colors flex items-center gap-1.5"
+              aria-label="Open side navigation and search"
+              title="Search and categories"
+            >
+              <Menu className="w-5 h-5" />
+              <span className="text-xs font-bold text-white pr-1">Catalog</span>
+            </button>
+
             <button
               onClick={() => onSelectCategory('all')}
               className="text-left group flex items-center gap-3"
@@ -96,35 +150,41 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
-          {/* Desktop Navigation Categories */}
-          <nav className="hidden xl:flex items-center gap-1 text-sm font-medium text-[#4A3C31]">
-            {CATEGORIES.slice(0, 5).map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => onSelectCategory(cat.id)}
-                className={`px-3 py-2 rounded-lg transition-all ${
-                  selectedCategory === cat.id
-                    ? 'bg-[#EADECE] text-[#2C1F14] font-semibold shadow-xs'
-                    : 'hover:bg-[#F2EADB] text-[#5A493B]'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </nav>
+          {/* Quick Search trigger in navbar for customer convenience */}
+          {onSearchChange && (
+            <div className="hidden md:flex items-center flex-1 max-w-xs mx-6">
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  placeholder="Quick search furniture..."
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white border border-[#D9CDB8] text-xs text-[#2C1F14] placeholder-[#8C7A6B] focus:outline-none focus:ring-1 focus:ring-[#8B5A2B]"
+                />
+                <Search className="w-3.5 h-3.5 text-[#8C7A6B] absolute left-2.5 top-1/2 -translate-y-1/2" />
+                {searchQuery && (
+                  <button
+                    onClick={() => onSearchChange('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-[#8C7A6B] hover:text-[#2C1F14]"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
-          {/* Actions: Admin, WhatsApp, Cart */}
+          {/* Actions: Side Menu button, WhatsApp, Cart */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Admin Portal Button */}
+            {/* Side Navigation Trigger button */}
             <button
-              id="nav-admin-portal-btn"
-              onClick={onOpenAdmin}
-              title="Open Admin Portal to add/edit products"
-              className="px-2.5 sm:px-3.5 py-2 rounded-lg text-xs font-semibold text-[#5A493B] hover:text-[#2C1F14] bg-[#F2EADB] hover:bg-[#E8DCC9] border border-[#D9CEBA] flex items-center gap-1.5 transition-colors"
+              onClick={onToggleSidebar}
+              className="px-3 py-2 rounded-xl text-xs font-semibold text-[#2C1F14] bg-[#EADECE] hover:bg-[#D5C4AC] border border-[#CFC0A8] flex items-center gap-1.5 transition-colors"
+              title="Open full catalog search and wood filters"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-[#8B5A2B]" />
-              <span className="hidden sm:inline">Admin Portal</span>
-              <span className="sm:hidden">Admin</span>
+              <Search className="w-3.5 h-3.5 text-[#8B5A2B]" />
+              <span className="hidden sm:inline">Search &amp; Filters</span>
+              <span className="sm:hidden">Search</span>
             </button>
 
             {/* Direct WhatsApp Quick Chat */}
@@ -133,7 +193,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               href={quickWhatsAppUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white bg-[#25D366] hover:bg-[#20ba59] shadow-sm transition-all hover:shadow"
+              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-white bg-[#25D366] hover:bg-[#20ba59] shadow-sm transition-all hover:shadow"
             >
               <MessageCircle className="w-4 h-4 fill-white" />
               <span>WhatsApp Us</span>
@@ -143,7 +203,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="nav-cart-btn"
               onClick={onOpenCart}
-              className="relative p-2.5 sm:px-4 sm:py-2.5 rounded-lg bg-[#2C1F14] text-[#E8DFC8] hover:bg-[#3D2C1D] flex items-center gap-2 shadow-sm transition-all"
+              className="relative p-2.5 sm:px-4 sm:py-2.5 rounded-xl bg-[#2C1F14] text-[#E8DFC8] hover:bg-[#3D2C1D] flex items-center gap-2 shadow-sm transition-all"
               aria-label="View Cart"
             >
               <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
@@ -154,68 +214,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               )}
             </button>
-
-            {/* Mobile Hamburger Menu Toggle */}
-            <button
-              id="nav-mobile-toggle-btn"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-lg text-[#2C1F14] hover:bg-[#EFE7D8]"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
           </div>
         </div>
       </div>
-
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="xl:hidden border-t border-[#E8DFC8] bg-[#FAF7F2] px-4 pt-3 pb-6 space-y-3">
-          <p className="text-xs font-bold text-[#8C7A6B] uppercase tracking-wider px-2">
-            Explore Furniture Collections
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => {
-                  onSelectCategory(cat.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`text-left px-3 py-2.5 rounded-lg text-xs font-medium transition-colors ${
-                  selectedCategory === cat.id
-                    ? 'bg-[#2C1F14] text-white font-semibold'
-                    : 'bg-[#F2EADB] text-[#4A3C31] hover:bg-[#E8DCC9]'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="pt-3 border-t border-[#E8DFC8] flex flex-col gap-2">
-            <a
-              href={quickWhatsAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#25D366]"
-            >
-              <MessageCircle className="w-4 h-4 fill-white" />
-              Contact on WhatsApp (Quick Order)
-            </a>
-            <button
-              onClick={() => {
-                onOpenAdmin();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold text-[#2C1F14] bg-[#EADECE] border border-[#CFC0A8]"
-            >
-              <SlidersHorizontal className="w-4 h-4 text-[#8B5A2B]" />
-              Manage Furniture & Prices (Admin)
-            </button>
-          </div>
-        </div>
-      )}
     </header>
   );
 };

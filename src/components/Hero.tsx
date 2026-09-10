@@ -51,10 +51,17 @@ export const Hero: React.FC<HeroProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Heading & Value Proposition */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EADECE] text-[#5C4530] text-xs font-semibold border border-[#D5C6AF] shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#C28E5C]" />
-              <span>Authentic Pakistani Hardwood Craftsmanship</span>
-            </div>
+            {settings.isSaleActive ? (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-100 text-[#991B1B] text-xs font-bold border border-red-300 shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-[#B91C1C] animate-ping" />
+                <span>🎉 {settings.saleTitle || 'Special Occasion Sale'}: Flat {settings.saleDiscountPercentage || 15}% OFF Across Showroom</span>
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EADECE] text-[#5C4530] text-xs font-semibold border border-[#D5C6AF] shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#C28E5C]" />
+                <span>Authentic Pakistani Hardwood Craftsmanship</span>
+              </div>
+            )}
 
             <h1 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold text-[#2A1D13] leading-[1.15] tracking-tight">
               Pure Solid Wood Furniture Handcrafted for Generations

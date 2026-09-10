@@ -14,7 +14,10 @@ import {
   Ruler, 
   CheckCircle2, 
   Filter, 
-  ArrowUpRight 
+  ArrowUpRight,
+  Search,
+  X,
+  RotateCcw
 } from 'lucide-react';
 import { Product, StoreSettings, CartItem } from './types';
 import { 
@@ -30,6 +33,7 @@ import {
 } from './utils/storage';
 import { CATEGORIES } from './data/furnitureData';
 import { Navbar } from './components/Navbar';
+import { SidebarNav } from './components/SidebarNav';
 import { Hero } from './components/Hero';
 import { ProductCard } from './components/ProductCard';
 import { ProductDetailModal } from './components/ProductDetailModal';
@@ -44,9 +48,12 @@ export default function App() {
   const [settings, setSettings] = useState<StoreSettings>(() => getStoredSettings());
   const [cart, setCart] = useState<CartItem[]>(() => getStoredCart());
 
-  // Navigation and Filter state
+  // Navigation and Filter state (Side Navigation Bar)
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedWoodFilter, setSelectedWoodFilter] = useState<string>('all');
+  const [selectedPriceFilter, setSelectedPriceFilter] = useState<string>('all');
+  const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useState<boolean>(false);
 
   // Modals state
   const [selectedProductForDetail, setSelectedProductForDetail] = useState<Product | null>(null);
@@ -57,6 +64,15 @@ export default function App() {
   useEffect(() => {
     saveStoredCart(cart);
   }, [cart]);
+
+  // Compute category counts for side navigation badges
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    products.forEach(p => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    return counts;
+  }, [products]);
 
   // Handle Cart Operations
   const handleAddToCart = (customizedItem: {
@@ -125,14 +141,23 @@ export default function App() {
     saveStoredSettings(updatedSettings);
   };
 
-  // Filtered Products
+  // Reset all filters
+  const handleResetAllFilters = () => {
+    setSelectedCategory('all');
+    setSearchQuery('');
+    setSelectedWoodFilter('all');
+    setSelectedPriceFilter('all');
+  };
+
+  // Filtered Products (supporting search, category, wood species, and price range)
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
       // Category filter
       if (selectedCategory !== 'all' && p.category !== selectedCategory) {
         return false;
       }
-      // Search query filter
+
+      // Search query filter (checks name, description, category, wood types)
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
         const matchesName = p.name.toLowerCase().includes(query);
@@ -143,9 +168,25 @@ export default function App() {
           return false;
         }
       }
+
+      // Wood species filter
+      if (selectedWoodFilter !== 'all') {
+        const targetWood = selectedWoodFilter.toLowerCase();
+        const hasWood = p.woodTypes.some(w => w.toLowerCase().includes(targetWood));
+        if (!hasWood) return false;
+      }
+
+      // Price range filter
+      if (selectedPriceFilter !== 'all') {
+        if (selectedPriceFilter === 'under-75k' && p.basePrice >= 75000) return false;
+        if (selectedPriceFilter === '75k-150k' && (p.basePrice < 75000 || p.basePrice > 150000)) return false;
+        if (selectedPriceFilter === '150k-300k' && (p.basePrice < 150000 || p.basePrice > 300000)) return false;
+        if (selectedPriceFilter === 'above-300k' && p.basePrice <= 300000) return false;
+      }
+
       return true;
     });
-  }, [products, selectedCategory, searchQuery]);
+  }, [products, selectedCategory, searchQuery, selectedWoodFilter, selectedPriceFilter]);
 
   const totalCartCount = cart.reduce((total, it) => total + it.quantity, 0);
 
@@ -154,6 +195,8 @@ export default function App() {
   const floatingWhatsAppUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(
     `Hello ${settings.businessName}, I would like to inquire about your furniture collection and custom woodcraft orders.`
   )}`;
+
+  const hasActiveFilters = selectedCategory !== 'all' || searchQuery.trim() !== '' || selectedWoodFilter !== 'all' || selectedPriceFilter !== 'all';
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBF9F5] text-[#1E1B18]">
@@ -165,108 +208,185 @@ export default function App() {
         onOpenAdmin={() => setIsAdminOpen(true)}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
-      />
-
-      {/* Main Banner / Hero */}
-      <Hero
-        settings={settings}
+        onToggleSidebar={() => setIsSidebarOpenMobile(prev => !prev)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        selectedCategory={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-        onOpenCustomOrder={() => {
-          // Scroll to custom woodwork banner
-          const el = document.getElementById('custom-woodwork-section');
-          el?.scrollIntoView({ behavior: 'smooth' });
-        }}
-        totalProductsCount={products.length}
       />
 
-      {/* Main Furniture Catalog Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex-1 w-full">
-        {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#E8DFC8]">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#8B5A2B]">
-              <Layers className="w-3.5 h-3.5" />
-              <span>
-                {selectedCategory === 'all'
-                  ? 'Complete Master Collection'
-                  : CATEGORIES.find(c => c.id === selectedCategory)?.label || 'Furniture'}
-              </span>
-            </div>
-            <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-[#2A1D13] mt-1">
-              Solid Wood Showroom &amp; Workshop Pieces
-            </h2>
-            <p className="text-xs sm:text-sm text-[#6B5A4B] mt-1">
-              Select any piece to configure custom sizes, wood type, polish finishes, and direct WhatsApp order.
-            </p>
-          </div>
+      {/* Main Responsive Layout with Side Navigation Bar */}
+      <div className="flex-1 flex flex-col lg:flex-row w-full max-w-[1600px] mx-auto">
+        {/* Left Side Navigation Bar (Search, Categories, Wood Species, Price Filters) */}
+        <SidebarNav
+          settings={settings}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedCategory={selectedCategory}
+          onSelectCategory={(cat) => {
+            setSelectedCategory(cat);
+            const el = document.getElementById('catalog-section-top');
+            el?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          selectedWoodFilter={selectedWoodFilter}
+          onSelectWoodFilter={setSelectedWoodFilter}
+          selectedPriceFilter={selectedPriceFilter}
+          onSelectPriceFilter={setSelectedPriceFilter}
+          cartCount={totalCartCount}
+          onOpenCart={() => setIsCartOpen(true)}
+          onOpenAdmin={() => setIsAdminOpen(true)}
+          isOpenMobile={isSidebarOpenMobile}
+          onCloseMobile={() => setIsSidebarOpenMobile(false)}
+          categoryCounts={categoryCounts}
+          totalProductsCount={products.length}
+        />
 
-          <div className="text-xs text-[#7A6958] flex items-center gap-2 font-medium">
-            <span>Showing <strong>{filteredProducts.length}</strong> of {products.length} items</span>
-            {selectedCategory !== 'all' && (
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className="text-[#8B5A2B] hover:underline font-semibold"
-              >
-                (View All)
-              </button>
+        {/* Right Main Content Column */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Main Banner / Hero */}
+          <Hero
+            settings={settings}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+            onOpenCustomOrder={() => {
+              const el = document.getElementById('custom-woodwork-section');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            totalProductsCount={products.length}
+          />
+
+          {/* Main Furniture Catalog Section */}
+          <main id="catalog-section-top" className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14 flex-1 w-full">
+            {/* Section Header */}
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-5 border-b border-[#E8DFC8]">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#8B5A2B]">
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>
+                    {selectedCategory === 'all'
+                      ? 'Complete Master Collection'
+                      : CATEGORIES.find(c => c.id === selectedCategory)?.label || 'Furniture'}
+                  </span>
+                </div>
+                <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-[#2A1D13] mt-1">
+                  Solid Wood Showroom &amp; Workshop Pieces
+                </h2>
+                <p className="text-xs sm:text-sm text-[#6B5A4B] mt-1">
+                  Browse authentic solid wood pieces with real photos. Configure size, polish, and order directly on WhatsApp.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3 text-xs text-[#7A6958]">
+                <span>Showing <strong className="text-[#2C1F14]">{filteredProducts.length}</strong> of {products.length} items</span>
+                {hasActiveFilters && (
+                  <button
+                    onClick={handleResetAllFilters}
+                    className="inline-flex items-center gap-1 text-[#8B5A2B] hover:text-[#5A3816] font-bold"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    Reset All
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Active Filters Pill Bar (When search or filters are active) */}
+            {hasActiveFilters && (
+              <div className="flex items-center gap-2 flex-wrap py-3 border-b border-[#EFE7D8] text-xs">
+                <span className="text-[#8C7A6B] font-medium text-[11px]">Active Filters:</span>
+                {selectedCategory !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EADECE] text-[#2C1F14] font-semibold">
+                    Category: {CATEGORIES.find(c => c.id === selectedCategory)?.label}
+                    <button onClick={() => setSelectedCategory('all')} className="hover:text-red-700">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+                {searchQuery && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EADECE] text-[#2C1F14] font-semibold">
+                    Search: "{searchQuery}"
+                    <button onClick={() => setSearchQuery('')} className="hover:text-red-700">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+                {selectedWoodFilter !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EADECE] text-[#2C1F14] font-semibold">
+                    Wood: {selectedWoodFilter}
+                    <button onClick={() => setSelectedWoodFilter('all')} className="hover:text-red-700">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+                {selectedPriceFilter !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#EADECE] text-[#2C1F14] font-semibold">
+                    Price: {selectedPriceFilter}
+                    <button onClick={() => setSelectedPriceFilter('all')} className="hover:text-red-700">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+              </div>
             )}
-          </div>
+
+            {/* Product Grid */}
+            {filteredProducts.length === 0 ? (
+              <div className="py-16 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-[#EADECE] flex items-center justify-center mx-auto text-[#8B5A2B]">
+                  <Filter className="w-8 h-8" />
+                </div>
+                <h3 className="font-serif-luxury text-xl font-bold text-[#2C1F14]">
+                  No furniture found matching your criteria
+                </h3>
+                <p className="text-xs text-[#7A6958] max-w-sm mx-auto">
+                  We couldn't find any items matching your current filters or search query. Try clearing filters or searching for another term.
+                </p>
+                <div className="pt-2 flex items-center justify-center gap-2">
+                  <button
+                    onClick={handleResetAllFilters}
+                    className="px-4 py-2.5 rounded-xl bg-[#2C1F14] text-white text-xs font-semibold hover:bg-[#422F1F] transition-colors"
+                  >
+                    Reset All Filters &amp; Search
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 pt-8">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    settings={settings}
+                    onSelectProduct={(p) => setSelectedProductForDetail(p)}
+                    onQuickWhatsApp={(p) => {
+                      // Handled by card
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Bespoke Custom Woodwork Section */}
+            <section id="custom-woodwork-section" className="mt-14">
+              <CustomWoodworkBanner settings={settings} />
+            </section>
+          </main>
+
+          {/* Footer */}
+          <Footer
+            settings={settings}
+            onSelectCategory={(cat) => {
+              setSelectedCategory(cat);
+              window.scrollTo({ top: 400, behavior: 'smooth' });
+            }}
+            onOpenAdmin={() => setIsAdminOpen(true)}
+            onOpenCustom={() => {
+              const el = document.getElementById('custom-woodwork-section');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          />
         </div>
-
-        {/* Product Grid */}
-        {filteredProducts.length === 0 ? (
-          <div className="py-16 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-[#EADECE] flex items-center justify-center mx-auto text-[#8B5A2B]">
-              <Filter className="w-8 h-8" />
-            </div>
-            <h3 className="font-serif-luxury text-xl font-bold text-[#2C1F14]">
-              No furniture found matching your criteria
-            </h3>
-            <p className="text-xs text-[#7A6958] max-w-sm mx-auto">
-              We couldn't find any items matching "{searchQuery}". Try searching for bed set, wardrobe, dining, or clear your filters.
-            </p>
-            <div className="pt-2 flex items-center justify-center gap-2">
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('all');
-                }}
-                className="px-4 py-2 rounded-xl bg-[#2C1F14] text-white text-xs font-semibold"
-              >
-                Reset Filters
-              </button>
-              <button
-                onClick={() => setIsAdminOpen(true)}
-                className="px-4 py-2 rounded-xl bg-[#FAF7F2] border border-[#D9CDB8] text-[#2C1F14] text-xs font-semibold"
-              >
-                + Add New Furniture in Admin
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pt-8">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                settings={settings}
-                onSelectProduct={(p) => setSelectedProductForDetail(p)}
-                onQuickWhatsApp={(p) => {
-                  // Prepares direct single item WhatsApp order
-                }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Bespoke Custom Woodwork Section */}
-        <section id="custom-woodwork-section">
-          <CustomWoodworkBanner settings={settings} />
-        </section>
-      </main>
+      </div>
 
       {/* Product Customization & Detail Modal */}
       <ProductDetailModal
@@ -287,7 +407,7 @@ export default function App() {
         onClearCart={handleClearCart}
       />
 
-      {/* Admin Portal Modal */}
+      {/* Admin Portal Modal (Protected with Owner Passcode) */}
       <AdminPortal
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
@@ -296,20 +416,6 @@ export default function App() {
         onSaveProducts={handleSaveProducts}
         onSaveSettings={handleSaveSettings}
         onResetProducts={handleResetProducts}
-      />
-
-      {/* Footer */}
-      <Footer
-        settings={settings}
-        onSelectCategory={(cat) => {
-          setSelectedCategory(cat);
-          window.scrollTo({ top: 400, behavior: 'smooth' });
-        }}
-        onOpenAdmin={() => setIsAdminOpen(true)}
-        onOpenCustom={() => {
-          const el = document.getElementById('custom-woodwork-section');
-          el?.scrollIntoView({ behavior: 'smooth' });
-        }}
       />
 
       {/* Floating WhatsApp Quick Action Button (Desktop & Mobile) */}
@@ -332,29 +438,32 @@ export default function App() {
 
       {/* Mobile Bottom Sticky Navigation Bar (Responsive on all mobile screens) */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FAF7F2]/98 backdrop-blur-md border-t border-[#E8DFC8] px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg">
+        {/* Open Side Navigation Bar & Search */}
+        <button
+          onClick={() => setIsSidebarOpenMobile(true)}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#FAF7F2] text-[#2C1F14] border border-[#D9CDB8] text-xs font-bold shadow-xs active:bg-[#EADECE]"
+        >
+          <Search className="w-4 h-4 text-[#8B5A2B]" />
+          <span>Side Menu &amp; Search</span>
+        </button>
+
+        {/* Quick WhatsApp Order */}
         <a
           href={floatingWhatsAppUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-2 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#25D366] text-white text-xs font-bold shadow-xs"
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#25D366] text-white text-xs font-bold shadow-xs active:bg-[#20ba59]"
         >
           <MessageCircle className="w-4 h-4 fill-white" />
-          <span>WhatsApp Quick Order</span>
+          <span>WhatsApp</span>
         </a>
 
-        <button
-          onClick={() => setIsAdminOpen(true)}
-          className="flex-1 flex items-center justify-center gap-1 py-2.5 rounded-xl bg-[#FAF7F2] text-[#2C1F14] border border-[#D9CDB8] text-xs font-bold"
-        >
-          <SlidersHorizontal className="w-3.5 h-3.5 text-[#8B5A2B]" />
-          <span>Admin</span>
-        </button>
-
+        {/* Cart */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#2C1F14] text-white text-xs font-bold shadow-xs relative"
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#2C1F14] text-white text-xs font-bold shadow-xs relative active:bg-[#3D2C1D]"
         >
-          <ShoppingBag className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
           <span>Cart</span>
           {totalCartCount > 0 && (
             <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#C28E5C] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">

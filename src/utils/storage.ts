@@ -121,6 +121,49 @@ export function formatRupees(amount: number): string {
   return 'Rs. ' + amount.toLocaleString('en-PK');
 }
 
+export function getEffectiveProductPrice(
+  product: Product,
+  settings: StoreSettings
+): {
+  basePrice: number;
+  finalPrice: number;
+  hasDiscount: boolean;
+  savings: number;
+  discountPercentage: number;
+  isOccasionSale: boolean;
+} {
+  const basePrice = product.basePrice;
+  let finalPrice = product.discountPrice ?? basePrice;
+  let isOccasionSale = false;
+  let discountPercentage = 0;
+
+  if (settings.isSaleActive && settings.saleDiscountPercentage && settings.saleDiscountPercentage > 0) {
+    const occasionSalePrice = Math.round(basePrice * (1 - settings.saleDiscountPercentage / 100));
+    // If product doesn't have an individual discount price, or occasion price is lower
+    if (!product.discountPrice || occasionSalePrice <= product.discountPrice) {
+      finalPrice = occasionSalePrice;
+      isOccasionSale = true;
+      discountPercentage = settings.saleDiscountPercentage;
+    } else {
+      discountPercentage = Math.round(((basePrice - finalPrice) / basePrice) * 100);
+    }
+  } else if (product.discountPrice && product.discountPrice < basePrice) {
+    discountPercentage = Math.round(((basePrice - product.discountPrice) / basePrice) * 100);
+  }
+
+  const hasDiscount = finalPrice < basePrice;
+  const savings = Math.max(0, basePrice - finalPrice);
+
+  return {
+    basePrice,
+    finalPrice,
+    hasDiscount,
+    savings,
+    discountPercentage,
+    isOccasionSale,
+  };
+}
+
 export function generateWhatsAppOrderUrl({
   settings,
   customerName,
@@ -193,6 +236,9 @@ export function generateWhatsAppOrderUrl({
   }
 
   text += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  if (settings.isSaleActive && settings.saleDiscountPercentage) {
+    text += `🎉 *OCCASION BENEFIT APPLIED:* ${settings.saleTitle || 'Special Festive Sale'} (${settings.saleDiscountPercentage}% OFF)\n`;
+  }
   text += `💰 *ESTIMATED TOTAL:* *${formatRupees(grandTotal)}*\n`;
   text += `━━━━━━━━━━━━━━━━━━━━━━\n`;
 
